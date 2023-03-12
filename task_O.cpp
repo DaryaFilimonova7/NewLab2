@@ -1,5 +1,7 @@
 #include <iostream>
-#include <vector>
+#include <iostream>
+#include <stack>
+#include <deque>
 #include <string>
 #include <algorithm>
 #include <sstream>
@@ -8,11 +10,12 @@
 int main() {
 
     //  111253. Гистограмма. Выведите площадь самого большого прямоугольника в гистограмме.
-    // 65 тестов из 66 из-за превышении максимального времени работы программы (1.095)
+    //  статус ОК
 
     // Ввод чисел
     long result = 0;
-    std::vector<long> chart;
+    std::deque<long> chart;
+    std::stack<int> stack;
 
     std::string numbers;
     std::getline(std::cin, numbers);
@@ -35,21 +38,49 @@ int main() {
         std::exit(0);
     }
 
+    // получение и удаление кол-ва колонок
     int n = chart[0];
+    chart.pop_front();
+
+    long column_idx;
     long area;
-    int left_idx, right_idx;
+    long max_area =0;
 
-    int i =1;
-    while (i <= n) {
-        left_idx = right_idx = i;
-        // поиск границ прямоугольников
-        while(left_idx > 1 && chart[left_idx-1] >= chart[i]) left_idx--;    // сканирование столбцов слева
-        while(right_idx < n && chart[right_idx+1] >= chart[i]) right_idx++; // сканирование столбцов справа
+    int i = 0;
 
-        area = (right_idx - left_idx + 1) * chart[i];
-        if (area > result) result = area;
-        i++;
+    // проверка столбцов и заполнение стека
+    while (i < n) {
+        if (stack.empty() || chart[stack.top()]<=chart[i]) {
+            stack.push(i);
+            i++;
+        }
+        else {
+            column_idx = stack.top();
+            stack.pop();
+            if (stack.empty())
+                area  = chart[column_idx]*i;
+            else
+                area = chart[column_idx]*(i - stack.top() - 1);
+            if (max_area<area)
+                max_area = area;
+        }
     }
+
+
+    // проверка стека
+    while (!stack.empty())
+    {
+        column_idx = stack.top();
+        stack.pop();
+        if(stack.empty())
+            area = chart[column_idx]*i;
+        else
+            area = chart[column_idx]*(i - stack.top() - 1);
+
+        if (max_area < area)
+            max_area = area;
+    }
+    result = max_area;
 
     std::printf("%ld\n",result);
 
