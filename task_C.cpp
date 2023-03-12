@@ -11,6 +11,7 @@ int main() {
 
     int moves = 0;
 
+    // list тк нет необходимости обращаться по индексам
     std::list<int> player1;
     std::list<int> player2;
     int x;
