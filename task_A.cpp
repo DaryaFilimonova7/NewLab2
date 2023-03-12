@@ -2,19 +2,22 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <cmath>
-#include <cstdlib>
+#include <set>
 
 
 int main() {
 
-    //  1418. Дано N чисел, требуется выяснить, сколько среди них различных.
+    //  1418. Разное. Дано N чисел, требуется выяснить, сколько среди них различных.
+    // статус ОК
+
+    long answer = 0;
 
     int n;
     // Ввод кол-ва чисел
     std::cin >> n;
     // проверка 1 <= N <= 100000
     if (n<1 || n>100000) {
+        std::printf("%ld\n",answer);
         std::exit(0);
     }
 
@@ -22,45 +25,30 @@ int main() {
     std::string numbers;
     std::cin.ignore();
     std::getline(std::cin, numbers);
-
-    std::vector<int> vars;
-    std::string s;
+    // использование set, чтобы отсеять дублирование
+    std::set<int> vars; 
+    std::string x;
     std::istringstream stream(numbers);
 
-     // Преобразование строки в число и обработка исключения
-     try {
-         while (std::getline(stream, s, ' ')) {
-             vars.push_back(std::stoi(s));
-         }
-     }
-     catch (const std::out_of_range& e) {
-         std::exit(0);
-     }
-
-    // проверка, что каждое не превышает 2*10^9
-    for (int i = 0; i<n; i++) {
-        if (abs(vars[i]) > 2*exp(9)) {
-            std::cout << "Error";
-            std::exit(0);
+    // Преобразование строки в число и обработка исключения
+    try {
+        while (std::getline(stream, x, ' ')) {
+            vars.insert(std::stoi(x));
         }
     }
-
-
-    int answer = 0;
-    bool not_unique;
-
-    //  Поиск различных чисел среди данных.
-    for (int i = 0; i<n; i++) {       // выбор числа для сравнения
-        for (int j=i+1;j<n; j++) {       // сравнение с остальными
-            if (vars[i]==vars[j]) {
-                not_unique = true;
-            }
-        }
-        if (!not_unique) answer++;
-        not_unique = false;
+    catch (const std::out_of_range& e) {
+        std::printf("%ld\n",answer);
+        std::exit(0);
+    }
+    catch (const std::invalid_argument& e) {
+        std::printf("%ld\n",answer);
+        std::exit(0);
     }
 
-    std::cout << answer;
+    answer = vars.size();
+
+    std::printf("%ld\n",answer);
 
     return 0;
 }
+
