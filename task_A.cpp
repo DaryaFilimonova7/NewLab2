@@ -25,7 +25,7 @@ int main() {
     std::string numbers;
     std::cin.ignore();
     std::getline(std::cin, numbers);
-    // использование set, чтобы отсеять дублирование
+    // использование set, чтобы отсеять повторение
     std::set<int> vars; 
     std::string x;
     std::istringstream stream(numbers);
